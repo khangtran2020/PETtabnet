@@ -20,7 +20,7 @@ def add_model_group(group):
     group.add_argument('--batch_size', type=int, default=512, help="batch size for training process")
     group.add_argument('--n_d', type=int, default=128, help='number hidden embedding dim')
     group.add_argument('--n_a', type=int, default=32, help='number hidden embedding dim')
-    group.add_argument('--n_step', type=int, default=4, help='number hidden embedding dim')
+    group.add_argument('--n_steps', type=int, default=4, help='number hidden embedding dim')
     group.add_argument('--output_dim', type=int, default=2, help='number hidden embedding dim')
     group.add_argument("--drop_out", type=float, default=0.2)
     group.add_argument("--clip", type=float, default=1.0, help='clipping gradient bound')
