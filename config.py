@@ -11,6 +11,8 @@ def add_general_group(group):
 def add_data_group(group):
     group.add_argument('--data_path', type=str, default='Data/', help="dir path to dataset")
     group.add_argument('--dataset', type=str, default='adult',help="name of dataset")
+    group.add_argument('--train_path', type=str, default='data/processed_train.csv', help="name of dataset")
+    group.add_argument('--test_path', type=str, default='data/processed_test.csv', help="name of dataset")
 
 def add_model_group(group):
     group.add_argument("--lr", type=float, default=0.001, help="learning rate")

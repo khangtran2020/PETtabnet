@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import GroupKFold
+import numpy as np
 
 def read_data(args):
     train_df = pd.read_csv(args.train_path)
@@ -37,4 +39,14 @@ def read_data(args):
     train_df = all_data[:train_df.shape[0]].reset_index(drop=True)
     test_df = all_data[train_df.shape[0]:].reset_index(drop=True)
 
-    return train_df, test_df, categorical_dims, cat_cols, num_cols
+    skf = GroupKFold(n_splits=args.folds)
+    train_df['fold'] = np.zeros(train_df.shape[0])
+    for i, (idxT, idxV) in enumerate(skf.split(train_df, train_df.Label, groups=train_df['Days'])):
+        train_df.at[idxV, 'fold'] = i
+
+    unused_feat = []
+    features = cat_cols + num_cols
+    cat_idxs = [i for i, f in enumerate(cat_cols)]
+    cat_dims = [categorical_dims[f] for i, f in enumerate(cat_cols)]
+
+    return train_df, test_df, features, cat_idxs, cat_dims

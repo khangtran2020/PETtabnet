@@ -121,8 +121,7 @@ def eval_fn(data_loader, model, criterion, device):
 
     return loss_eval.item(), fin_outputs, fin_targets
 
-
-def run(fold, df, features, args, writer):
+def run(fold, df, features, cat_idxs, cat_dims, args, writer):
     df_train = df[df.fold != fold]
     df_valid = df[df.fold == fold]
 
@@ -172,7 +171,8 @@ def run(fold, df, features, args, writer):
                          n_independent=2,
                          n_shared=2,
                          momentum=0.02,
-                         mask_type="sparsemax")
+                         mask_type="sparsemax",
+                         cat_idxs=cat_idxs, cat_dims=cat_dims, cat_emb_dim=1)
     # model = torch.nn.DataParallel(model)
     model.to(device)
 
@@ -217,7 +217,7 @@ def run(fold, df, features, args, writer):
         writer.add_scalar('AP/train', train_ap, epoch)
         writer.add_scalar('AP/valid', valid_ap, epoch)
 
-        es(valid_ap, model, f'model_{fold}.bin')
+        es(valid_ap, model, args.save_path+'{}.bin'.format(args.save_name))
 
         if es.early_stop:
             print('Maximum Patience {} Reached , Early Stopping'.format(args.patience))
